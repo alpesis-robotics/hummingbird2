@@ -19,8 +19,8 @@ void KeyboardInteraction(V3F& force, shared_ptr<Visualizer_GLUT> vis);
 void ProcessConfigCommands(shared_ptr<Visualizer_GLUT> vis);
 void LoadScenario(string scenarioFile);
 void ResetSimulation();
-void PrintHelpText();
 void OnTimer(int v);
+void Help();
 
 const int NUM_SIM_STEPS_PER_TIMER = 5;
 
@@ -43,8 +43,7 @@ V3F force, moment;
 
 int main(int argcp, char **argv)
 {
-  PrintHelpText();
- 
+  Help();
   // load parameters
   ParamsHandle config = SimpleConfig::GetInstance();
 
@@ -61,15 +60,13 @@ int main(int argcp, char **argv)
     _scenarioFile = SLR::Trim(buf);
     fclose(f);
   }
-
   LoadScenario(_scenarioFile);
  
   glutTimerFunc(1,&OnTimer,0);
-  
   glutMainLoop();
-
   return 0;
 }
+
 
 void LoadScenario(string scenarioFile)
 {
@@ -104,8 +101,6 @@ void LoadScenario(string scenarioFile)
   { 
     mlNode.reset(new MavlinkNode());
   }
-
-  
 }
 
 
@@ -113,7 +108,6 @@ void ResetSimulation()
 {
   _simCount++;
   ParamsHandle config = SimpleConfig::GetInstance();
-
   printf("Simulation #%d (%s)\n", _simCount, _scenarioFile.c_str());
 
   randomNumCarry = -1;
@@ -137,9 +131,10 @@ void ResetSimulation()
     grapher->RegisterDataSource(*i);
     grapher->RegisterDataSources((*i)->sensors);
     grapher->RegisterDataSource((*i)->estimator);
-		grapher->RegisterDataSource((*i)->controller);
+    grapher->RegisterDataSource((*i)->controller);
   }
 }
+
 
 void OnTimer(int)
 {
@@ -195,6 +190,7 @@ void OnTimer(int)
   glutTimerFunc(5,&OnTimer,0);
 }
 
+
 vector<QuadcopterHandle> CreateVehicles()
 {
   vector<QuadcopterHandle> ret;
@@ -217,8 +213,8 @@ vector<QuadcopterHandle> CreateVehicles()
     i++;
   }
   return ret;
-
 }
+
 
 void KeyboardInteraction(V3F& force, shared_ptr<Visualizer_GLUT> visualizer)
 {
@@ -230,26 +226,31 @@ void KeyboardInteraction(V3F& force, shared_ptr<Visualizer_GLUT> visualizer)
     force += V3F(0, -forceStep, 0);
     keyPressed = true;
   }
+
   if (visualizer->IsSpecialKeyDown(GLUT_KEY_UP))
   {
     force += V3F(0, 0, -forceStep);
     keyPressed = true;
   }
+
   if (visualizer->IsSpecialKeyDown(GLUT_KEY_RIGHT))
   {
     force += V3F(0, forceStep, 0);
     keyPressed = true;
   }
+
   if (visualizer->IsSpecialKeyDown(GLUT_KEY_DOWN))
   {
     force += V3F(0, 0, forceStep);
     keyPressed = true;
   }
+
   if (visualizer->IsKeyDown('w') || visualizer->IsKeyDown('W'))
   {
     force += V3F(forceStep, 0, 0);
     keyPressed = true;
   }
+
   if (visualizer->IsKeyDown('s') || visualizer->IsKeyDown('S'))
   {
     force += V3F(-forceStep, 0, 0);
@@ -260,6 +261,7 @@ void KeyboardInteraction(V3F& force, shared_ptr<Visualizer_GLUT> visualizer)
   {
     force = V3F();
   }
+
   if (force.mag() > 2.f)
   {
     force = force / force.mag() * 2.f;
@@ -308,13 +310,14 @@ void ProcessConfigCommands(shared_ptr<Visualizer_GLUT> vis)
   }
 }
 
-void PrintHelpText()
+
+void Help()
 {
-  printf("SIMULATOR!\n");
+  printf("HummingBird Simulator\n");
   printf("Select main window to interact with keyboard/mouse:\n");
-  printf("LEFT DRAG / X+LEFT DRAG / Z+LEFT DRAG = rotate, pan, zoom camera\n");
-  printf("W/S/UP/LEFT/DOWN/RIGHT - apply force\n");
-  printf("C - clear all graphs\n");
-  printf("R - reset simulation\n");
-  printf("Space - pause simulation\n");
+  printf("- LEFT DRAG / X+LEFT DRAG / Z+LEFT DRAG = rotate, pan, zoom camera\n");
+  printf("- W/S/UP/LEFT/DOWN/RIGHT - apply force\n");
+  printf("- C: clear all graphs\n");
+  printf("- R: reset simulation\n");
+  printf("- Space: pause simulation\n");
 }
