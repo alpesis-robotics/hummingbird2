@@ -1,6 +1,7 @@
+#include <vector>
+
 #include "Common.h"
 #include "GLUTMenu.h"
-#include <vector>
 #include "DrawingFuncs.h"
 
 using std::vector;
@@ -16,17 +17,22 @@ void _g_OnMenu(int code)
   }
 }
 
+
 GLUTMenu::GLUTMenu()
 {
   _g_GLUTMenu = this;
 }
+
 
 GLUTMenu::~GLUTMenu()
 {
   _g_GLUTMenu = NULL;
 }
 
-void GLUTMenu::AddMenuEntry(const string& entry, const string& fullCommand, GLUTMenu::MenuEntry& top)
+
+void GLUTMenu::AddMenuEntry(const string& entry, 
+                            const string& fullCommand, 
+                            GLUTMenu::MenuEntry& top)
 {
   auto tmp = entry.find_first_of(".");
   if (tmp == string::npos)
@@ -35,6 +41,7 @@ void GLUTMenu::AddMenuEntry(const string& entry, const string& fullCommand, GLUT
     top.children[entry].glutMenuEntryID = _menuItemCounter;
     _menuMap[_menuItemCounter++] = fullCommand;
   }
+
   else
   {
     string left = entry.substr(0, tmp);
@@ -47,6 +54,7 @@ void GLUTMenu::AddMenuEntry(const string& entry, const string& fullCommand, GLUT
   }
 }
 
+
 GLUTMenu::MenuEntry GLUTMenu::StringListToMenuTree(const vector<string>& strings)
 {
   MenuEntry top;
@@ -56,6 +64,7 @@ GLUTMenu::MenuEntry GLUTMenu::StringListToMenuTree(const vector<string>& strings
   }
   return top;
 }
+
 
 void GLUTMenu::CreateGLUTMenus(MenuEntry& top)
 {
@@ -84,6 +93,7 @@ void GLUTMenu::CreateGLUTMenus(MenuEntry& top)
   }
 }
 
+
 void GLUTMenu::RemoveGLUTMenus(MenuEntry& top)
 {
   if (top.children.empty())
@@ -99,6 +109,7 @@ void GLUTMenu::RemoveGLUTMenus(MenuEntry& top)
   
 }
 
+
 void GLUTMenu::CreateMenu(const vector<string>& strings)
 {
   _menuItemCounter = 0;
@@ -107,11 +118,10 @@ void GLUTMenu::CreateMenu(const vector<string>& strings)
     RemoveGLUTMenus(menuTree);
   }
   menuTree = StringListToMenuTree(strings);
-
   CreateGLUTMenus(menuTree);
- 
   glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
+
 
 void GLUTMenu::OnGLUTMenu(int id)
 {

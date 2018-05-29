@@ -20,9 +20,7 @@ public:
   FastDelegate1<string> OnMenu;
   int _menuID;
   int _menuItemCounter;
-
   std::map<int, string> _menuMap;
-
   bool IsActive();
 
 protected:

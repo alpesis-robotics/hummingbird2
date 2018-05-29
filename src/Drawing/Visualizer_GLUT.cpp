@@ -539,8 +539,9 @@ void Visualizer_GLUT::DrawBottomStatus(float simTime)
   sprintf_s(buf, 100, "%s t=%.3f%s", _scenarioName.c_str(), simTime, paused?" Paused":"");
 
   // glColor3f(0, 0, 1);
-  glColor3f(0.4, 0.4, 0.4);
-  DrawStrokeText(buf, -1 + 0.025f, -0.975f, 0, 1.5, .5f, .5f);
+  glColor3f(0.6, 0.6, 0.6);
+  // DrawStrokeText(buf, -1 + 0.025f, -0.975f, 0, 1.5, .5f, .5f);
+  DrawStrokeText(buf, -1+0.025f, -0.95f, 0, 0, .4f, .4f);
 }
 
 
