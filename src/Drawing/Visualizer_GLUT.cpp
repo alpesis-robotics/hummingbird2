@@ -510,16 +510,13 @@ void Visualizer_GLUT::Paint()
   {
     glPushMatrix();
     // Move the graph to the bottom right corner and scale it down
-    glTranslatef(1.f-GRAPH_SCALE,-(1.f-GRAPH_SCALE),0);
-    glScalef(GRAPH_SCALE*.95f,GRAPH_SCALE*.95f, 1);
-
+    glTranslatef(1.f-GRAPH_SCALE, -(1.f-GRAPH_SCALE), 0);
+    glScalef(GRAPH_SCALE*.95f, GRAPH_SCALE*.95f, 1);
     graph->Paint(); // draw the graph
-
     glPopMatrix();
   }
   
   _last_draw_time_ms = (float)t.Seconds()*1000.f;
-
   if (_delayedScenarioLoader != "")
   {
     LoadScenario(_delayedScenarioLoader);
@@ -539,10 +536,10 @@ void Visualizer_GLUT::OnLoadScenario(string scenario)
 void Visualizer_GLUT::DrawBottomStatus(float simTime)
 {
   char buf[100];
-
   sprintf_s(buf, 100, "%s t=%.3f%s", _scenarioName.c_str(), simTime, paused?" Paused":"");
-  
-  glColor3f(0, 0, 1);
+
+  // glColor3f(0, 0, 1);
+  glColor3f(0.4, 0.4, 0.4);
   DrawStrokeText(buf, -1 + 0.025f, -0.975f, 0, 1.5, .5f, .5f);
 }
 
@@ -770,9 +767,9 @@ void Visualizer_GLUT::SetKeyboardFunc(void(*callback)(unsigned char, int, int))
 
 void DrawXYGrid(V3D center, double lenX, double lenY, int numCellsX, int numCellsY)
 {
-  V3D corner = center - V3D(lenX/2.0,lenY/2.0,0);
-  double dx = lenX/(double)numCellsX;
-  double dy = lenY/(double)numCellsY;
+  V3D corner = center - V3D(lenX/2.0, lenY/2.0,0);
+  double dx = lenX / (double)numCellsX;
+  double dy = lenY / (double)numCellsY;
   int count;
 
   glBegin(GL_LINES);
@@ -780,20 +777,24 @@ void DrawXYGrid(V3D center, double lenX, double lenY, int numCellsX, int numCell
   count=0;
   for(double y=corner.y; count<=numCellsY; y+=dy,count++)
   {	
-    glVertex3d(corner.x,y,center.z);
-    glVertex3d(corner.x+lenX,y,center.z);
+    glVertex3d(corner.x, y, center.z);
+    glVertex3d(corner.x+lenX, y, center.z);
   }
 
   count=0;
   for(double x=corner.x; count<=numCellsX; x+=dx,count++)
   {
-    glVertex3d(x,corner.y,center.z);
-    glVertex3d(x,corner.y+lenY,center.z);
+    glVertex3d(x, corner.y, center.z);
+    glVertex3d(x, corner.y+lenY, center.z);
   }
+
   glEnd();
 }
 
 
+/*
+ * Volume Grid
+ */
 GLuint Visualizer_GLUT::MakeVolumeCallList()
 {
   GLuint list = glGenLists(1);
@@ -813,15 +814,18 @@ GLuint Visualizer_GLUT::MakeVolumeCallList()
   //glDisable( GL_POLYGON_OFFSET_FILL );	
   glEnable(GL_LINE_SMOOTH);
 
-  glColor3f(.65f, .65f, .65f);
   // floor
-  GLRectangle(V3F(0,0,0),V3F(0,0,-1),V3F(1,0,0),5,5,5,5);
+  glColor4f(1, 1, 1, 0.3f);
+  // glColor3f(.65f, .65f, .65f);
+  GLRectangle(V3F(0,0,0), V3F(0,0,-1), V3F(1,0,0), 5, 5, 5, 5);
   glDisable( GL_POLYGON_OFFSET_FILL );
 
+  // grid
   _glDraw->SetLighting(false);
   glPolygonMode(GL_FRONT_AND_BACK,GL_LINE); // wireframe mode!
   //glBegin(GL_LINES);
-  glColor3d(.55, .55, .55);
+  glColor3d(.8, .8, .8);
+  // glColor3d(.55, .55, .55);
   GLRectangle(V3F(0, 0, 0), V3F(0, 0, -1), V3F(1, 0, 0), 5, 5, 5, 5);
   //glEnd();
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
