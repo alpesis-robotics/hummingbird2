@@ -14,17 +14,18 @@ using namespace SLR;
 Graph::Graph(const char* name)
 {
   _name = name;
-	_logFile = NULL;
+  _logFile = NULL;
   Reset();
 }
 
-Graph::Series::Series()
-  : x(MAX_POINTS, 0), y(MAX_POINTS, 0)
+
+Graph::Series::Series() : x(MAX_POINTS, 0), y(MAX_POINTS, 0)
 {
   noLegend = false;
   bold = false;
   negate = false;
 }
+
 
 void Graph::AddItem(string path)
 {
@@ -32,32 +33,39 @@ void Graph::AddItem(string path)
   {
     AddAbsThreshold(path.substr(12));
   }
+
   else if (path.find("WindowThreshold(") != string::npos)
   {
     AddWindowThreshold(path.substr(15));
   }
-	else if (path.find("SigmaThreshold(") != string::npos)
-	{
-		AddSigmaThreshold(path.substr(14));
-	}
-	else if (ToUpper(path) == "LOGTOFILE")
-	{
-		BeginLogToFile();
-	}
+
+  else if (path.find("SigmaThreshold(") != string::npos)
+  {
+    AddSigmaThreshold(path.substr(14));
+  }
+
+  else if (ToUpper(path) == "LOGTOFILE")
+  {
+    BeginLogToFile();
+  }
+
   else if (path.find("SetYAxis(") != string::npos)
   {
     SetYAxis(path.substr(9));
   }
+
   else
   {
     AddSeries(path);
   }
 }
 
+
 void Graph::AddItem(string path, vector<string> options)
 {
 
 }
+
 
 void Graph::AddAbsThreshold(string path)
 {
@@ -67,10 +75,9 @@ void Graph::AddAbsThreshold(string path)
     SLR_WARNING1("Malformed AbsThreshold command (%s)", path.c_str());
     return;
   }
+
   path = path.substr(1, path.length() - 2);
-
   vector<string> args = SLR::Split(path, ',');
-
   if (args.size()!=3 || args[0]=="" || args[1]=="" || args[2]=="")
   {
     SLR_WARNING1("Malformed AbsThreshold command (%s)", path.c_str());
@@ -80,6 +87,7 @@ void Graph::AddAbsThreshold(string path)
   shared_ptr<AbsThreshold> thr(new AbsThreshold(args[0], (float)atof(args[1].c_str()), (float)atof(args[2].c_str())));
   _analyzers.push_back(thr);
 }
+
 
 void Graph::SetYAxis(string argsString)
 {
@@ -93,6 +101,7 @@ void Graph::SetYAxis(string argsString)
   _graphYHigh = (float)atof(args[1].c_str());
 }
 
+
 void Graph::AddWindowThreshold(string path)
 {
   path = SLR::Trim(path);
@@ -104,7 +113,6 @@ void Graph::AddWindowThreshold(string path)
   path = path.substr(1, path.length() - 2);
 
   vector<string> args = SLR::Split(path, ',');
-
   if (args.size() != 3 || args[0] == "" || args[1] == "" || args[2] == "")
   {
     SLR_WARNING1("Malformed WindowThreshold command (%s)", path.c_str());
@@ -115,35 +123,36 @@ void Graph::AddWindowThreshold(string path)
   _analyzers.push_back(thr);
 }
 
+
 void Graph::AddSigmaThreshold(string path)
 {
-	path = SLR::Trim(path);
-	if (path.length() < 4 || path[0] != '(' || path[path.length() - 1] != ')')
-	{
-		SLR_WARNING1("Malformed SigmaThreshold command (%s)", path.c_str());
-		return;
-	}
-	path = path.substr(1, path.length() - 2);
+  path = SLR::Trim(path);
+  if (path.length() < 4 || path[0] != '(' || path[path.length() - 1] != ')')
+  {
+    SLR_WARNING1("Malformed SigmaThreshold command (%s)", path.c_str());
+    return;
+  }
+  path = path.substr(1, path.length() - 2);
 
-	vector<string> args = SLR::Split(path, ',');
+  vector<string> args = SLR::Split(path, ',');
+  if (args.size() != 6|| args[0] == "" || args[1] == "" || args[2] == "")
+  {
+    SLR_WARNING1("Malformed SigmaThreshold command (%s)", path.c_str());
+    return;
+  }
 
-	if (args.size() != 6|| args[0] == "" || args[1] == "" || args[2] == "")
-	{
-		SLR_WARNING1("Malformed SigmaThreshold command (%s)", path.c_str());
-		return;
-	}
-
-	shared_ptr<SigmaThreshold> thr(new SigmaThreshold(args[0], args[1],args[2],
+  shared_ptr<SigmaThreshold> thr(new SigmaThreshold(args[0], args[1],args[2],
 		(float)atof(args[3].c_str()),
 		(float)atof(args[4].c_str()), 
 		(float)atof(args[5].c_str())
 	));
-	_analyzers.push_back(thr);
+  _analyzers.push_back(thr);
 }
+
 
 void Graph::AddSeries(string path, bool autoColor, V3F color, vector<string> options)
 {
-	ParamsHandle config = SimpleConfig::GetInstance();
+  ParamsHandle config = SimpleConfig::GetInstance();
 
   Series newSeries;
   bool force = false;
@@ -155,8 +164,7 @@ void Graph::AddSeries(string path, bool autoColor, V3F color, vector<string> opt
   }
   int colorNum =0;
 
-  newSeries._legend = path;
-    
+  newSeries._legend = path;  
   for (size_t i = 1; i < options.size(); i++)
   {
     options[i] = Trim(options[i]);
@@ -193,7 +201,6 @@ void Graph::AddSeries(string path, bool autoColor, V3F color, vector<string> opt
 
   
   newSeries._yName = path;
-  
   newSeries._objName = SLR::LeftOf(newSeries._yName, '.');
   newSeries._fieldName = newSeries._yName.substr(newSeries._objName.size() + 1);
 
@@ -212,6 +219,7 @@ void Graph::AddSeries(string path, bool autoColor, V3F color, vector<string> opt
   _series.push_back(newSeries);
 }
 
+
 bool Graph::IsSeriesPlotted(string path)
 {
   // Loop through the series vector and check if the field already exists there
@@ -227,6 +235,7 @@ bool Graph::IsSeriesPlotted(string path)
   return false;
 }
 
+
 void Graph::RemoveAllElements()
 {
   _title = "";
@@ -235,6 +244,7 @@ void Graph::RemoveAllElements()
   _graphYLow = -numeric_limits<float>::infinity();
   _graphYHigh = numeric_limits<float>::infinity();
 }
+
 
 void Graph::Reset()
 {
@@ -246,6 +256,7 @@ void Graph::Reset()
   _graphYLow = -numeric_limits<float>::infinity();
   _graphYHigh = numeric_limits<float>::infinity();
 }
+
 
 void Graph::Clear()
 {
@@ -273,42 +284,44 @@ void Graph::Clear()
 	}
 }
 
+
 void Graph::BeginLogToFile()
 {
-	if (_logFile != NULL) return;
+  if (_logFile != NULL) return;
 
-	string path = "../conf/log/" + _name + ".txt";
-	_logFile = fopen(path.c_str(), "w");
+  string path = "../conf/log/" + _name + ".txt";
+  _logFile = fopen(path.c_str(), "w");
 	
-	if (_logFile)
-	{
-		fprintf(_logFile, "time");
-		for (unsigned int i = 0; i < _series.size(); i++)
-		{
-			fprintf(_logFile, ", ");
-			fprintf(_logFile, "%s", _series[i]._yName.c_str());
-		}
-		fprintf(_logFile, "\n");
-		fflush(_logFile);
-	}
+  if (_logFile)
+  {
+    fprintf(_logFile, "time");
+    for (unsigned int i = 0; i < _series.size(); i++)
+    {
+      fprintf(_logFile, ", ");
+      fprintf(_logFile, "%s", _series[i]._yName.c_str());
+    }
+    fprintf(_logFile, "\n");
+    fflush(_logFile);
+  }
 }
+
 
 void Graph::Update(double time, std::vector<shared_ptr<DataSource> >& sources)
 {
-	std::vector<bool> newData(_series.size());
-	bool anyNewData = false;
+  std::vector<bool> newData(_series.size());
+  bool anyNewData = false;
 
   for (unsigned int i = 0; i < _series.size(); i++)
   {
-		newData[i] = false;
+    newData[i] = false;
     for (unsigned int j = 0; j < sources.size(); j++)
     {
       float tmp;
-			if (sources[j]->GetData(_series[i]._yName, tmp))
-			{
-				newData[i] = true;
-				anyNewData = true;
-				_series[i].x.push((float)time);
+      if (sources[j]->GetData(_series[i]._yName, tmp))
+      {
+        newData[i] = true;
+        anyNewData = true;
+        _series[i].x.push((float)time);
         if (_series[i].negate)
         {
           _series[i].y.push(-tmp);
@@ -322,29 +335,30 @@ void Graph::Update(double time, std::vector<shared_ptr<DataSource> >& sources)
     } 
   }
 
-	if (_logFile != NULL && anyNewData)
-	{
-		fprintf(_logFile, "%f", time);
-		for (unsigned int i = 0; i < _series.size(); i++)
-		{
-			if (newData[i])
-			{
-				fprintf(_logFile, ",%f", _series[i].y.newest());
-			}
-			else
-			{
-				fprintf(_logFile, ",%f", numeric_limits<float>::quiet_NaN());
-			}
-		}
-		fprintf(_logFile, "\n");
-		fflush(_logFile);
-	}
+  if (_logFile != NULL && anyNewData)
+  {
+    fprintf(_logFile, "%f", time);
+    for (unsigned int i = 0; i < _series.size(); i++)
+    {
+      if (newData[i])
+      {
+        fprintf(_logFile, ",%f", _series[i].y.newest());
+      }
+      else
+      {
+        fprintf(_logFile, ",%f", numeric_limits<float>::quiet_NaN());
+      }
+    }
+    fprintf(_logFile, "\n");
+    fflush(_logFile);
+  }
 
   for (unsigned i = 0; i < _analyzers.size(); i++)
   {
     _analyzers[i]->Update(time,sources);
   }
 }
+
 
 void GetRange(FixedQueue<float>& f, float& low, float& high)
 {
@@ -358,6 +372,7 @@ void GetRange(FixedQueue<float>& f, float& low, float& high)
   }
 
 }
+
 
 void Graph::DrawSeries(Series& s)
 {
@@ -381,8 +396,8 @@ void Graph::DrawSeries(Series& s)
   glEnd();
 
   glLineWidth(tmp);
-
 }
+
 
 // Given a data range (r), what is the format string we should use for printing the tick
 // labels, how many ticks should there be, and what should the tick labels be?
@@ -417,6 +432,7 @@ string GetValueFormat(float low, float high, float* tick, float* A, float* B)
   if (B != NULL)		*B = high - fmodf(high, T) + T;
   return format;
 }
+
 
 void Graph::Draw()
 {
@@ -485,17 +501,14 @@ void Graph::Draw()
   {
     highY += rangeY * 0.11f;
   }
-
   lowX -= (highX - lowX) * .1f;
 
   glPushMatrix();
-
   glScalef(2.f / (highX - lowX), 2.f / (highY - lowY), 1.f);
   glTranslatef(-(highX + lowX) / 2.f, -(highY + lowY) / 2.f, 0.f);
 
   
   // y=0 line
-  
   glLineWidth(1);
   glBegin(GL_LINES);  
   glColor3f(.5f, .5f, .5f);
@@ -506,7 +519,6 @@ void Graph::Draw()
   }
   glEnd();
   
-
   glLineWidth(1);
   glBegin(GL_LINES);
 
@@ -524,10 +536,10 @@ void Graph::Draw()
 
   glEnd(); // GL_LINES
 
-	for (unsigned int i = 0; i < _series.size(); i++)
-	{
-		DrawSeries(_series[i]);
-	}
+  for (unsigned int i = 0; i < _series.size(); i++)
+  {
+    DrawSeries(_series[i]);
+  }
 
   for (unsigned i = 0; i < _analyzers.size(); i++)
   {
@@ -553,7 +565,14 @@ void Graph::Draw()
   {
     if (_series[i].noLegend) continue;
     glColor3f(_series[i]._color[0], _series[i]._color[1], _series[i]._color[2]);
-    DrawStrokeText_Align(ToLower(_series[i]._legend).c_str(), .95f, .8f - j * .205f, 0, 1.5f, 1.f, 2.f,GLD_ALIGN_RIGHT);
+    DrawStrokeText_Align(ToLower(_series[i]._legend).c_str(), 
+                         .95f, 
+                         .8f - j * .205f, 
+                         0, 
+                         1.5f, 
+                         1.f, 
+                         2.f,
+                         GLD_ALIGN_RIGHT);
     j++;
   }
 

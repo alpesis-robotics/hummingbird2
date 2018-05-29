@@ -2,8 +2,10 @@
 
 #include <vector>
 #include <map>
-using namespace std;
+
 #include "../Utility/FixedQueue.h"
+
+using namespace std;
 
 class QuadDynamics;
 class DataSource;
@@ -26,12 +28,11 @@ public:
   void AddAbsThreshold(string path);
   void AddWindowThreshold(string path);
   void SetYAxis(string argsString);
-	void AddSigmaThreshold(string path);
+  void AddSigmaThreshold(string path);
   bool IsSeriesPlotted(string path);
   void RemoveAllElements();
   void SetTitle(string title) { _title = title; }
-
-	void BeginLogToFile();
+  void BeginLogToFile();
 
 
   struct Series
@@ -50,15 +51,11 @@ public:
     }
   };
 
-  vector<shared_ptr<BaseAnalyzer> > _analyzers;
-
   void DrawSeries(Series& s);
-  
   vector<Series> _series;
   string _name;
-
-	FILE* _logFile;
-
+  vector<shared_ptr<BaseAnalyzer> > _analyzers;
+  FILE* _logFile;
   float _graphYLow, _graphYHigh;
   string _title;
 };

@@ -17,6 +17,7 @@ void _g_OnGrapherDisplay()
   }
 }
 
+
 void _g_OnGrapherReshape(int w, int h)
 {
   if (_g_GraphManager != NULL)
@@ -25,12 +26,12 @@ void _g_OnGrapherReshape(int w, int h)
   }
 }
 
+
 GraphManager::GraphManager(bool own_window)
 {
-	ParamsHandle config = SimpleConfig::GetInstance();
+  ParamsHandle config = SimpleConfig::GetInstance();
 
   _ownWindow = own_window;
-
   if (_ownWindow)
   {
     _g_GraphManager = this;
@@ -50,6 +51,7 @@ GraphManager::GraphManager(bool own_window)
   graph2.reset(new Graph("Graph2"));
 }
 
+
 GraphManager::~GraphManager()
 {
   graph1.reset();
@@ -58,17 +60,20 @@ GraphManager::~GraphManager()
   _g_GraphManager = NULL;
 }
 
+
 void GraphManager::Reset()
 {
   graph1->Reset();
   graph2->Reset();
 }
 
+
 void GraphManager::Clear()
 {
   graph1->Clear();
   graph2->Clear();
 }
+
 
 void GraphManager::UpdateData(double time)
 {
@@ -89,7 +94,6 @@ void GraphManager::UpdateData(double time)
 
 void GraphManager::DrawUpdate()
 {
- 
   if (_ownWindow)
   {
     glutSetWindow(_glutWindowNum);
@@ -102,6 +106,7 @@ void GraphManager::InitPaint()
   glClearColor(0.0, 0.0, 0.0, 0.0);  // When screen cleared, use black.
   glShadeModel(GL_SMOOTH);  // How the object color will be rendered smooth or flat
 }
+
 
 void GraphManager::Paint()
 {
@@ -133,7 +138,8 @@ void GraphManager::Paint()
     }
     glScalef(1, .5f, 1);
 
-    glColor3f(0, 0, 0);
+    glColor4f(0, 0, 0, 0.8);
+    // glColor3f(0, 0, 0);
     glBegin(GL_QUADS);
     glVertex2f(-1, 1);
     glVertex2f(1, 1);
@@ -151,7 +157,8 @@ void GraphManager::Paint()
     glTranslatef(0, -.5f, 0);
     glScalef(1, .5f, 1);
 
-    glColor3f(0, 0, 0);
+    glColor4f(0, 0, 0, 0.8);
+    // glColor3f(0, 0, 0);
     glBegin(GL_QUADS);
     glVertex2f(-1, 1);
     glVertex2f(1, 1);
@@ -225,5 +232,4 @@ void GraphManager::GraphCommand(string cmd)
     printf("Broken graphing command: [%s]\n", cmd.c_str());
   }
 
-  
 }

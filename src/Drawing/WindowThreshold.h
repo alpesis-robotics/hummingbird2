@@ -98,9 +98,9 @@ public:
 
     if (_active)
     {
-			float tmp = 0;
-			glGetFloatv(GL_LINE_WIDTH, &tmp);
-			glLineWidth(2);
+      float tmp = 0;
+      glGetFloatv(GL_LINE_WIDTH, &tmp);
+      glLineWidth(2);
       glColor3f(0, 1, 0);
       glBegin(GL_LINE_STRIP);
       glVertex2f(_lastTimeAboveThresh, CONSTRAIN(_thresh,minY,maxY));
@@ -109,7 +109,7 @@ public:
       glVertex2f(_lastTimeAboveThresh, CONSTRAIN(-_thresh, minY, maxY));
       glVertex2f(_lastTimeAboveThresh, CONSTRAIN(_thresh, minY, maxY));
       glEnd();
-			glLineWidth(tmp);
+      glLineWidth(tmp);
     }
     else
     {
