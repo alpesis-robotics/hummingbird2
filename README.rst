@@ -38,7 +38,7 @@ Codes
           +---- images/              scenario images
           +---- config/              configuration files for controller and vehicle
           +---- lib/                 external libraries
-          +---- project/             IDE configurations
+          +---- ide/                 IDE configurations
           +---- src/                 codes
           +---- CMakeLists.txt
           +---- README.rst
