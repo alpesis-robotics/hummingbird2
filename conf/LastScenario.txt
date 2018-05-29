@@ -1,1 +1,1 @@
-../conf/10_MagUpdate.txt
+../conf/03_PositionControl.txt

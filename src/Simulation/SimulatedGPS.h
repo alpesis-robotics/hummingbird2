@@ -5,6 +5,7 @@
 #include "Math/Random.h"
 #include "Estimator/BaseQuadEstimator.h"
 
+
 class SimulatedGPS : public SimulatedQuadSensor
 { 
 public:

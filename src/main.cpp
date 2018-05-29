@@ -16,34 +16,29 @@ using SLR::Quaternion;
 using SLR::ToUpper;
 
 void KeyboardInteraction(V3F& force, shared_ptr<Visualizer_GLUT> vis);
-bool receivedResetRequest = true;
-bool paused = false;
-void PrintHelpText();
 void ProcessConfigCommands(shared_ptr<Visualizer_GLUT> vis);
 void LoadScenario(string scenarioFile);
 void ResetSimulation();
-
-vector<QuadcopterHandle> quads;
-
-shared_ptr<Visualizer_GLUT> visualizer;
-shared_ptr<GraphManager> grapher;
-
-float dtSim = 0.001f;
-const int NUM_SIM_STEPS_PER_TIMER = 5;
-Timer lastDraw;
-V3F force, moment;
-
-float simulationTime=0;
-int randomNumCarry=-1;
-
+void PrintHelpText();
 void OnTimer(int v);
 
-vector<QuadcopterHandle> CreateVehicles();
+const int NUM_SIM_STEPS_PER_TIMER = 5;
+
+bool receivedResetRequest = true;
+bool paused = false;
+float dtSim = 0.001f;
+float simulationTime=0;
+int randomNumCarry=-1;
+int _simCount = 0;
 string _scenarioFile="../conf/01_Intro.txt";
 
+vector<QuadcopterHandle> quads;
+shared_ptr<Visualizer_GLUT> visualizer;
+shared_ptr<GraphManager> grapher;
+vector<QuadcopterHandle> CreateVehicles();
 shared_ptr<MavlinkNode> mlNode;
-
-int _simCount = 0;
+Timer lastDraw;
+V3F force, moment;
 
 
 int main(int argcp, char **argv)
