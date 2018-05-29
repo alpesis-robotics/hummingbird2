@@ -798,7 +798,7 @@ void Visualizer_GLUT::InitializeMenu(const vector<string>& strings)
   tmp.push_back("Toggle.ActualTrajectory");
   tmp.push_back("Toggle.Thrusts");
 
-  FILE* f = fopen("../config/Scenarios.txt","r");
+  FILE* f = fopen("../conf/Scenarios.txt","r");
   char buf[512]; buf[511] = 0;
   while (f && fgets(buf, 510, f))
   {
@@ -807,7 +807,7 @@ void Visualizer_GLUT::InitializeMenu(const vector<string>& strings)
   }
   fclose(f);
 
-  f = fopen("../config/X_Scenarios.txt", "r");
+  f = fopen("../conf/X_Scenarios.txt", "r");
   while (f && fgets(buf, 510, f))
   {
     string trimmed = SLR::Trim(string(buf));
@@ -840,7 +840,7 @@ void Visualizer_GLUT::OnMenu(string cmd)
   }
   else if (cmd.find("Scenario.")!=string::npos)
   {
-    string name = string("../config/")+cmd.substr(9)+".txt";
+    string name = string("../conf/")+cmd.substr(9)+".txt";
     _delayedScenarioLoader = name;
   }
   else if (s.size() == 3 && s[0] == "PrintParam")

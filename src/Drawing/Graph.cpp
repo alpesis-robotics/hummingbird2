@@ -277,7 +277,7 @@ void Graph::BeginLogToFile()
 {
 	if (_logFile != NULL) return;
 
-	string path = "../config/log/" + _name + ".txt";
+	string path = "../conf/log/" + _name + ".txt";
 	_logFile = fopen(path.c_str(), "w");
 	
 	if (_logFile)

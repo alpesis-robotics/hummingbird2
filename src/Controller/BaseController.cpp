@@ -27,7 +27,7 @@ void BaseController::Init()
 
   trajectory.Clear();
   string trajFile = config->Get(_config + ".Trajectory","");
-  if (!trajectory.ReadFile(string("../config/")+trajFile))
+  if (!trajectory.ReadFile(string("../conf/")+trajFile))
   {
     TrajectoryPoint tmp;
     tmp.position = config->Get(_config + ".Trajectory", V3F());

@@ -9,6 +9,7 @@
 #include "Utility/StringUtils.h"
 #include "Drawing/GraphManager.h"
 #include "MavlinkNode/MavlinkTranslation.h"
+#include "MavlinkNode/MavlinkNode.h"
 #include "Simulation/SimulatedGPS.h"
 
 using SLR::Quaternion;
@@ -38,10 +39,12 @@ int randomNumCarry=-1;
 void OnTimer(int v);
 
 vector<QuadcopterHandle> CreateVehicles();
-string _scenarioFile="../config/01_Intro.txt";
+string _scenarioFile="../conf/01_Intro.txt";
 
-#include "MavlinkNode/MavlinkNode.h"
 shared_ptr<MavlinkNode> mlNode;
+
+int _simCount = 0;
+
 
 int main(int argcp, char **argv)
 {
@@ -55,7 +58,7 @@ int main(int argcp, char **argv)
   grapher.reset(new GraphManager(false));
 
   // re-load last opened scenario
-  FILE *f = fopen("../config/LastScenario.txt", "r");
+  FILE *f = fopen("../conf/LastScenario.txt", "r");
   if (f)
   {
     char buf[100]; buf[99] = 0;
@@ -75,7 +78,7 @@ int main(int argcp, char **argv)
 
 void LoadScenario(string scenarioFile)
 {
-  FILE *f = fopen("../config/LastScenario.txt","w");
+  FILE *f = fopen("../conf/LastScenario.txt","w");
   if(f)
   {
     fprintf(f, "%s", scenarioFile.c_str());
@@ -110,7 +113,6 @@ void LoadScenario(string scenarioFile)
   
 }
 
-int _simCount = 0;
 
 void ResetSimulation()
 {
